@@ -9,7 +9,7 @@ builder.Services.AddMinimalApiLogic(builder.Configuration);
 
 builder.Services.Configure<RequestLocalizationOptions>(options =>
 {
-	options.DefaultRequestCulture = new RequestCulture("en-UK");
+    options.DefaultRequestCulture = new RequestCulture("en-UK");
 });
 
 // Add services to the container.

@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 
 namespace MinimalApi.Logic.Validation;
+
 internal class IsbnValidator : AbstractValidator<string>
 {
     public IsbnValidator()
@@ -67,9 +68,9 @@ internal class IsbnValidator : AbstractValidator<string>
         int sum = 0;
         var checkDigit = isbn[9];
 
-        for (int i = 0; i < isbn.Length-1; i++)
+        for (int i = 0; i < isbn.Length - 1; i++)
         {
-            sum += isbn[i] * (10-i);
+            sum += isbn[i] * (10 - i);
         }
 
         return (11 - (sum % 11)) == checkDigit;
@@ -80,9 +81,9 @@ internal class IsbnValidator : AbstractValidator<string>
         var sum = 0;
         var checkDigit = isbn[12];
 
-        for (int i = 0; i < isbn.Length-1; i++)
+        for (int i = 0; i < isbn.Length - 1; i++)
         {
-            if(i%2 == 0)
+            if (i % 2 == 0)
             {
                 sum += (isbn[i] * 1);
                 continue;

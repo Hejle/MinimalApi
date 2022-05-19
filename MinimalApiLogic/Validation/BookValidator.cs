@@ -1,12 +1,8 @@
 ﻿using FluentValidation;
 using MinimalApi.Common.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MinimalApi.Logic.Validation;
+
 internal class BookValidator : AbstractValidator<Book>
 {
     public BookValidator()

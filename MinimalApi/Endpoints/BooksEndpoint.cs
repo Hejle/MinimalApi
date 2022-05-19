@@ -37,9 +37,6 @@ public static class BooksEndpoint
             .WithName("CreateBook")
             .AllowAnonymous();
         //.RequireAuthorization();
-
-        //app.MapPut("put", () => "This is a PUT");
-        //app.MapDelete("delete", () => "This is a DELETE");
     }
 
     private static IResult CreateBook(Book book, IBookService bookService)
@@ -52,6 +49,10 @@ public static class BooksEndpoint
         catch (ValidationException validationException)
         {
             return Results.BadRequest(validationException.Errors);
+        }
+        catch (BookException bookException)
+        {
+            return Results.BadRequest(bookException.Message);
         }
     }
 

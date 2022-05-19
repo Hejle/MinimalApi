@@ -66,7 +66,6 @@ public class BookDataAccess : IBookDataAccess
         {
             return false;
         }
-        bookToBeUpdated = book;
         _context.SaveChanges();
         return true;
     }

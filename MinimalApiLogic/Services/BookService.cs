@@ -33,15 +33,16 @@ internal class BookService : IBookService
 
     public void CreateBook(Book book)
     {
-        //if (book == null)
-        //    throw new ValidationException("Book was null");
-        //if (book.PageCount <= 0)
-        //    throw new ValidationException("Pagecount must be more than zero");
         var validationResult = _bookValidator.Validate(book);
         if (!validationResult.IsValid)
         {
             throw new ValidationException(validationResult.Errors);
         }
+        if (GetBook(book.Isbn) != null)
+        {
+            throw new BookException("A book with the following ISBN already exists");
+        }
+
         _bookDataAccess.CreateBook(book);
     }
 
