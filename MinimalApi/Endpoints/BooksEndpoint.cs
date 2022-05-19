@@ -1,91 +1,83 @@
-﻿using MinimalApi.Common.Models;
-using MinimalApi.Database.Services;
+﻿using FluentValidation;
+using MinimalApi.Common.Models;
 using MinimalApi.Logic.Services;
-using System.ComponentModel.DataAnnotations;
 
-namespace MinimalApi.Endpoints
+namespace MinimalApi.Endpoints;
+
+public static class BooksEndpoint
 {
-    public static class BooksEndpoint
+    public static void UseBookEndpoint(this IEndpointRouteBuilder app, IConfiguration configuration)
     {
-        public static void AddBooks(this IServiceCollection serviceCollection, IConfiguration configuration) { }
+        //var scopeRequiredByApi = configuration["AzureAd:Scopes"];
 
-        public static void UseBooks(this IEndpointRouteBuilder app, IConfiguration configuration)
-        {
-            //var scopeRequiredByApi = configuration["AzureAd:Scopes"];
+        app.MapGet("books/{isbn}", GetBook)
+            .Produces<Book>(200).Produces(404)
+            .WithName("GetBook")
+            .AllowAnonymous();
 
-            app.MapGet("books/{isbn}", GetBook)
-                .Produces<Book>(200).Produces(404)
-                .WithName("GetBook")
-                .AllowAnonymous();
-
-            app.MapGet("books", GetBooks)
+        app.MapGet("books", GetBooks)
             .Produces<IEnumerable<Book>>(200)
             .WithName("GetAllBooks")
             .AllowAnonymous();
 
-            app.MapPut("books/{isbn}", UpdateBook)
-                .Accepts<Book>("application/json")
-                .Produces<Book>(200).Produces(404)
-                .WithName("UpdateBook")
-                .AllowAnonymous();
+        app.MapPut("books/{isbn}", UpdateBook)
+            .Accepts<Book>("application/json")
+            .Produces<Book>(200).Produces(404)
+            .WithName("UpdateBook")
+            .AllowAnonymous();
 
-            app.MapDelete("books/{isbn}", DeleteBook)
+        app.MapDelete("books/{isbn}", DeleteBook)
             .Produces(200).Produces(404)
             .WithName("DeleteBook")
             .AllowAnonymous();
 
-            app.MapPost("books", CreateBook)
-                .Accepts<Book>("application/json")
-                .Produces<Book>(201)
-                .WithName("CreateBook")
-                .AllowAnonymous();
-            //.RequireAuthorization();
+        app.MapPost("books", CreateBook)
+            .Accepts<Book>("application/json")
+            .Produces<Book>(201)
+            .WithName("CreateBook")
+            .AllowAnonymous();
+        //.RequireAuthorization();
 
-            //app.MapPut("put", () => "This is a PUT");
-            //app.MapDelete("delete", () => "This is a DELETE");
+        //app.MapPut("put", () => "This is a PUT");
+        //app.MapDelete("delete", () => "This is a DELETE");
+    }
 
-        }
-
-        private static IResult CreateBook(Book book, IBookService bookService)
+    private static IResult CreateBook(Book book, IBookService bookService)
+    {
+        try
         {
-            try
-            {
-                bookService.CreateBook(book);
-                return Results.Created($"/books/{book.Isbn}", book);
-            }
-            catch (ValidationException validationException)
-            {
-                return Results.BadRequest(validationException.Message);
-            }
+            bookService.CreateBook(book);
+            return Results.Created($"/books/{book.Isbn}", book);
         }
-
-        private static IResult GetBook(string isbn, IBookService bookService)
+        catch (ValidationException validationException)
         {
-            var book = bookService.GetBook(isbn);
-            if(book == null)
-                return Results.NotFound();
-            return Results.Ok(book);
+            return Results.BadRequest(validationException.Errors);
         }
+    }
 
-        private static IResult GetBooks(IBookService bookService)
-        {
-            var books = bookService.GetAllBooks();
-            return Results.Ok(books);
-        }
+    private static IResult GetBook(string isbn, IBookService bookService)
+    {
+        var book = bookService.GetBook(isbn);
+        if (book == null)
+            return Results.NotFound();
+        return Results.Ok(book);
+    }
 
-        private static IResult DeleteBook(string isbn, IBookService bookService)
-        {
-            var deleted = bookService.DeleteBook(isbn);
-            return deleted ? Results.Ok() : Results.NotFound();
+    private static IResult GetBooks(IBookService bookService)
+    {
+        var books = bookService.GetAllBooks();
+        return Results.Ok(books);
+    }
 
-        }
+    private static IResult DeleteBook(string isbn, IBookService bookService)
+    {
+        var deleted = bookService.DeleteBook(isbn);
+        return deleted ? Results.Ok() : Results.NotFound();
+    }
 
-        private static IResult UpdateBook(string isbn, Book book, IBookService bookService)
-        {
-          
-            var updatedBook = bookService.UpdateBook(isbn, book);
-            return updatedBook ? Results.Ok(book) : Results.NotFound();
-
-        }
+    private static IResult UpdateBook(string isbn, Book book, IBookService bookService)
+    {
+        var updatedBook = bookService.UpdateBook(isbn, book);
+        return updatedBook ? Results.Ok(book) : Results.NotFound();
     }
 }

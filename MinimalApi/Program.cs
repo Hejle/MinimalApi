@@ -1,18 +1,16 @@
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Web;
-using Microsoft.Identity.Web.Resource;
+using Microsoft.AspNetCore.Localization;
 using MinimalApi.Database;
-using MinimalApi.Database.Context;
 using MinimalApi.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddMinimalApiDatabase(builder.Configuration);
 builder.Services.AddMinimalApiLogic(builder.Configuration);
-builder.Services.AddBooks(builder.Configuration);
 
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+	options.DefaultRequestCulture = new RequestCulture("en-UK");
+});
 
 // Add services to the container.
 //builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -25,18 +23,16 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseRequestLocalization();
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
 //app.UseAuthentication();
 //app.UseAuthorization();
 
-app.UseBooks(app.Configuration);
+app.UseBookEndpoint(app.Configuration);
 
 app.Run();

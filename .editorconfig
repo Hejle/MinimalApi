@@ -2,3 +2,4 @@
 
 # Default severity for analyzer diagnostics with category 'DocumentationHeader'
 dotnet_analyzer_diagnostic.category-DocumentationHeader.severity = none
+csharp_style_namespace_declarations=file_scoped:suggestion

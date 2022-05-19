@@ -5,15 +5,16 @@ VisualStudioVersion = 17.1.32328.378
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MinimalApi", "MinimalApi\MinimalApi.csproj", "{29C19A47-9E9F-4536-9E66-FA803BA7106F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalApi.Logic", "MinimalApiLogic\MinimalApi.Logic.csproj", "{31002EBD-C867-4E99-BC87-B58ABD7FE891}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MinimalApi.Logic", "MinimalApiLogic\MinimalApi.Logic.csproj", "{31002EBD-C867-4E99-BC87-B58ABD7FE891}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalApi.Database", "MinimalApi.Database\MinimalApi.Database.csproj", "{81C406E1-542D-44F2-A343-C2CFCADE7D6B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MinimalApi.Database", "MinimalApi.Database\MinimalApi.Database.csproj", "{81C406E1-542D-44F2-A343-C2CFCADE7D6B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalApi.Common", "MinimalApi.Common\MinimalApi.Common.csproj", "{C1ABAFA3-5722-4174-BA3A-2062DCAF58F9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MinimalApi.Common", "MinimalApi.Common\MinimalApi.Common.csproj", "{C1ABAFA3-5722-4174-BA3A-2062DCAF58F9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CFF82E8A-37B3-4725-BDC9-3C0F2A8E359E}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		TheCleanCoder.json = TheCleanCoder.json
 	EndProjectSection
 EndProject
 Global

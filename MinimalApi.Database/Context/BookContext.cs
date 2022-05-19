@@ -1,29 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MinimalApi.Common.Models;
 
-namespace MinimalApi.Database.Context
+namespace MinimalApi.Database.Context;
+
+public class BookContext : DbContext
 {
-    public class BookContext : DbContext
+    public DbSet<Book> Books { get; set; }
+
+    public BookContext(DbContextOptions<BookContext> options) : base(options){}
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        public DbSet<Book> Books { get; set; }
-
-        public BookContext(DbContextOptions<BookContext> options) : base(options){}
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder
-                .Entity<Book>()
-                .Property(book => book.Isbn)
-                .IsUnicode(false)
-                .HasMaxLength(20);
-            modelBuilder
-                .Entity<Book>()
-                .HasKey(book => book.Isbn);
-        }
+        modelBuilder
+            .Entity<Book>()
+            .Property(book => book.Isbn)
+            .IsUnicode(false)
+            .HasMaxLength(20);
+        modelBuilder
+            .Entity<Book>()
+            .HasKey(book => book.Isbn);
     }
 }
