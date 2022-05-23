@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
-using Microsoft.Net.Http.Headers;
+using System.DirectoryServices.AccountManagement;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
-using System.DirectoryServices.AccountManagement;
 
 namespace MinimalApi.Auth.BasicAuth;
 
@@ -11,7 +10,6 @@ public class BasicAuthHandler : AuthenticationHandler<BasicAuthSchemeOptions>
 {
     public const string UserNameHeader = "UserName";
     public const string PasswordHeader = "Password";
-
 
     public BasicAuthHandler(IOptionsMonitor<BasicAuthSchemeOptions> options,
         ILoggerFactory logger,

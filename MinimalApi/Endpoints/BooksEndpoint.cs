@@ -1,25 +1,16 @@
 ﻿using FluentValidation;
-using FluentValidation.Results;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using MinimalApi.Auth;
 using MinimalApi.Common.Models;
 using MinimalApi.Endpoints.ExceptionModel;
 using MinimalApi.Logic.Services;
-using System.Collections.Generic;
 
 namespace MinimalApi.Endpoints;
 
 public static class BooksEndpoint
 {
-
-
-
     public static void UseBookEndpoint(this IEndpointRouteBuilder app, IConfiguration configuration)
     {
         //var scopeRequiredByApi = configuration["AzureAd:Scopes"];
-        
+
         app.MapGet("books/{isbn}", GetBook)
             .Produces<Book>(200).Produces(404)
             .WithName("GetBook")

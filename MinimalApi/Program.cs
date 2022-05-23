@@ -1,11 +1,9 @@
 using Microsoft.AspNetCore.Localization;
-using MinimalApi.Database;
-using MinimalApi.Endpoints;
+using MinimalApi.Auth;
 using MinimalApi.Auth.ApiKeyAuth;
 using MinimalApi.Auth.BasicAuth;
-using MinimalApi.Auth;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Negotiate;
+using MinimalApi.Database;
+using MinimalApi.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,7 +23,7 @@ builder.Services.AddAuthentication(options =>
     .AddScheme<ApiKeyAuthSchemeOptions, ApiKeyAuthHandler>(ApiKeySchemeConstants.SchemeName, _ => { })
     .AddScheme<BasicAuthSchemeOptions, BasicAuthHandler>(BasicSchemeConstants.SchemeName, _ => { })
     .AddNegotiate()
-    .AddPolicyScheme(DefaultAuthScheme.SchemeName, DefaultAuthScheme.SchemeName, 
+    .AddPolicyScheme(DefaultAuthScheme.SchemeName, DefaultAuthScheme.SchemeName,
         options => DefaultAuthScheme.ChooseAuthScheme(options));
 
 builder.Services.AddAuthorization();
