@@ -1,6 +1,10 @@
 using Microsoft.AspNetCore.Localization;
 using MinimalApi.Database;
 using MinimalApi.Endpoints;
+using MinimalApi.Auth.ApiKeyAuth;
+using MinimalApi.Auth.BasicAuth;
+using MinimalApi.Auth;
+using Microsoft.AspNetCore.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,10 +16,20 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
     options.DefaultRequestCulture = new RequestCulture("en-UK");
 });
 
-// Add services to the container.
-//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-//    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
-//builder.Services.AddAuthorization();
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = DefaultAuthScheme.SchemeName;
+    options.DefaultChallengeScheme = DefaultAuthScheme.SchemeName;
+})
+    .AddScheme<ApiKeyAuthSchemeOptions, ApiKeyAuthHandler>(ApiKeySchemeConstants.SchemeName, _ => { })
+    .AddScheme<BasicAuthSchemeOptions, BasicAuthHandler>(BasicSchemeConstants.SchemeName, _ => { })
+    .AddPolicyScheme(DefaultAuthScheme.SchemeName, DefaultAuthScheme.SchemeName, (Action<PolicySchemeOptions>)(options =>
+    {
+        DefaultAuthScheme.ChooseAuthScheme(options);
+    }));
+
+builder.Services.AddAuthorization();
+
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -24,14 +38,13 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 app.UseRequestLocalization();
+app.UseHttpsRedirection();
 
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.UseHttpsRedirection();
-
-//app.UseAuthentication();
-//app.UseAuthorization();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseBookEndpoint(app.Configuration);
 

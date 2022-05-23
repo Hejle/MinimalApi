@@ -1,35 +1,46 @@
 ﻿using FluentValidation;
+using FluentValidation.Results;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using MinimalApi.Auth;
 using MinimalApi.Common.Models;
+using MinimalApi.Endpoints.ExceptionModel;
 using MinimalApi.Logic.Services;
+using System.Collections.Generic;
 
 namespace MinimalApi.Endpoints;
 
 public static class BooksEndpoint
 {
+
+
+
     public static void UseBookEndpoint(this IEndpointRouteBuilder app, IConfiguration configuration)
     {
         //var scopeRequiredByApi = configuration["AzureAd:Scopes"];
-
+        
         app.MapGet("books/{isbn}", GetBook)
             .Produces<Book>(200).Produces(404)
             .WithName("GetBook")
             .AllowAnonymous();
+        //.RequireAuthorization(AuthenticationScheme = ApiKeySchemeConstants.SchemeName);
 
         app.MapGet("books", GetBooks)
             .Produces<IEnumerable<Book>>(200)
             .WithName("GetAllBooks")
-            .AllowAnonymous();
+            .RequireAuthorization();
 
         app.MapPut("books/{isbn}", UpdateBook)
             .Accepts<Book>("application/json")
             .Produces<Book>(200).Produces(404)
             .WithName("UpdateBook")
-            .AllowAnonymous();
+            .RequireAuthorization();
 
         app.MapDelete("books/{isbn}", DeleteBook)
             .Produces(200).Produces(404)
             .WithName("DeleteBook")
-            .AllowAnonymous();
+            .RequireAuthorization();
 
         app.MapPost("books", CreateBook)
             .Accepts<Book>("application/json")
@@ -37,8 +48,7 @@ public static class BooksEndpoint
             .Produces<HttpValidationProblemDetails>(400)
             .Produces<ApiException>(400)
             .WithName("CreateBook")
-            .AllowAnonymous();
-        //.RequireAuthorization();
+            .RequireAuthorization();
     }
 
     private static IResult CreateBook(Book book, IBookService bookService, ILogger<Program> logger)
