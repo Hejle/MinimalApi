@@ -34,12 +34,14 @@ public static class BooksEndpoint
         app.MapPost("books", CreateBook)
             .Accepts<Book>("application/json")
             .Produces<Book>(201)
+            .Produces<HttpValidationProblemDetails>(400)
+            .Produces<ApiException>(400)
             .WithName("CreateBook")
             .AllowAnonymous();
         //.RequireAuthorization();
     }
 
-    private static IResult CreateBook(Book book, IBookService bookService)
+    private static IResult CreateBook(Book book, IBookService bookService, ILogger<Program> logger)
     {
         try
         {
@@ -48,11 +50,17 @@ public static class BooksEndpoint
         }
         catch (ValidationException validationException)
         {
-            return Results.BadRequest(validationException.Errors);
+            var problems = validationException.Errors.ToDictionary(error => error.PropertyName, error => new string[] { error.ErrorMessage });
+            return Results.ValidationProblem(problems);
         }
         catch (BookException bookException)
         {
-            return Results.BadRequest(bookException.Message);
+            return Results.BadRequest(new ApiException(bookException));
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Unexpected error when creating book");
+            return Results.BadRequest(new ApiException(exception));
         }
     }
 
