@@ -5,6 +5,7 @@ using MinimalApi.Auth.ApiKeyAuth;
 using MinimalApi.Auth.BasicAuth;
 using MinimalApi.Auth;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Negotiate;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,13 +24,11 @@ builder.Services.AddAuthentication(options =>
 })
     .AddScheme<ApiKeyAuthSchemeOptions, ApiKeyAuthHandler>(ApiKeySchemeConstants.SchemeName, _ => { })
     .AddScheme<BasicAuthSchemeOptions, BasicAuthHandler>(BasicSchemeConstants.SchemeName, _ => { })
-    .AddPolicyScheme(DefaultAuthScheme.SchemeName, DefaultAuthScheme.SchemeName, (Action<PolicySchemeOptions>)(options =>
-    {
-        DefaultAuthScheme.ChooseAuthScheme(options);
-    }));
+    .AddNegotiate()
+    .AddPolicyScheme(DefaultAuthScheme.SchemeName, DefaultAuthScheme.SchemeName, 
+        options => DefaultAuthScheme.ChooseAuthScheme(options));
 
 builder.Services.AddAuthorization();
-
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
