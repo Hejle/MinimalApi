@@ -9,9 +9,10 @@ namespace MinimalApi.Database;
 
 public static class MinimalApiLogicRegistration
 {
-    public static void AddMinimalApiLogic(this IServiceCollection serviceCollection, IConfiguration configuration)
+    public static void AddMinimalApiLogic(this IServiceCollection serviceCollection)
     {
         serviceCollection.AddScoped<IBookService, BookService>();
+        serviceCollection.AddScoped<IJokeService, JokeService>();
         serviceCollection.AddScoped<IValidator<Book>, BookValidator>();
     }
 }

@@ -40,7 +40,7 @@ internal class BookService : IBookService
         }
         if (GetBook(book.Isbn) != null)
         {
-            throw new BookException("A book with the following ISBN already exists");
+            throw new MinimalApiException("A book with the following ISBN already exists");
         }
 
         _bookDataAccess.CreateBook(book);

@@ -3,23 +3,23 @@
 namespace MinimalApi.Common.Models;
 
 [Serializable]
-public class BookException : Exception
+public class MinimalApiException : Exception
 {
-    public BookException()
+    public MinimalApiException()
     {
     }
 
-    public BookException(string message)
+    public MinimalApiException(string message)
         : base(message)
     {
     }
 
-    public BookException(string message, Exception innerException)
+    public MinimalApiException(string message, Exception innerException)
         : base(message, innerException)
     {
     }
 
-    protected BookException(SerializationInfo info, StreamingContext context)
+    protected MinimalApiException(SerializationInfo info, StreamingContext context)
         : base(info, context)
     {
     }

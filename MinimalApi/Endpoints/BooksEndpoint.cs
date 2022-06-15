@@ -7,15 +7,12 @@ namespace MinimalApi.Endpoints;
 
 public static class BooksEndpoint
 {
-    public static void UseBookEndpoint(this IEndpointRouteBuilder app, IConfiguration configuration)
+    public static void UseBookEndpoint(this IEndpointRouteBuilder app)
     {
-        //var scopeRequiredByApi = configuration["AzureAd:Scopes"];
-
         app.MapGet("books/{isbn}", GetBook)
             .Produces<Book>(200).Produces(404)
             .WithName("GetBook")
             .AllowAnonymous();
-        //.RequireAuthorization(AuthenticationScheme = ApiKeySchemeConstants.SchemeName);
 
         app.MapGet("books", GetBooks)
             .Produces<IEnumerable<Book>>(200)
@@ -37,7 +34,7 @@ public static class BooksEndpoint
             .Accepts<Book>("application/json")
             .Produces<Book>(201)
             .Produces<HttpValidationProblemDetails>(400)
-            .Produces<ApiException>(400)
+            .Produces<ApiExceptionModel>(400)
             .WithName("CreateBook")
             .RequireAuthorization();
     }
@@ -54,14 +51,14 @@ public static class BooksEndpoint
             var problems = validationException.Errors.ToDictionary(error => error.PropertyName, error => new string[] { error.ErrorMessage });
             return Results.ValidationProblem(problems);
         }
-        catch (BookException bookException)
+        catch (MinimalApiException apiException)
         {
-            return Results.BadRequest(new ApiException(bookException));
+            return Results.BadRequest(new ApiExceptionModel(apiException));
         }
         catch (Exception exception)
         {
             logger.LogError(exception, "Unexpected error when creating book");
-            return Results.BadRequest(new ApiException(exception));
+            return Results.BadRequest(new ApiExceptionModel(exception));
         }
     }
 

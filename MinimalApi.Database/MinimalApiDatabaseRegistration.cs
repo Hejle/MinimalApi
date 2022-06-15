@@ -13,6 +13,10 @@ public static class MinimalApiDatabaseRegistration
         serviceCollection.AddDbContext<BookContext>(
             options => options.UseSqlServer(configuration.GetConnectionString("MinimalApiDatabase"))
         );
+        serviceCollection.AddDbContext<JokerContext>(
+            options => options.UseSqlServer(configuration.GetConnectionString("MinimalApiDatabase"))
+        );
         serviceCollection.AddScoped<IBookDataAccess, BookDataAccess>();
+        serviceCollection.AddScoped<IJokersDataAccess, JokersDataAccess>();
     }
 }
